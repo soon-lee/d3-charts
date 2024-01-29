@@ -19,7 +19,7 @@ function App() {
         { group: 'Group10', label: 'Group10', value: 28 }
     ];
   const [donut,setDonut] = useState({enabled:false,rate:0.5});
-  const config:PieConfig = {width:500,height:300,};
+  const config = {width:500,height:300,};
 
   return (
     <>
@@ -38,7 +38,7 @@ function App() {
         }))}>
             {donut.enabled ? '饼图' : '环图'}
         </button>
-        <PieChart data={data} donut={donut} config={config} />
+        <PieChart data={data} donut={donut} config={config as PieConfig} />
       </div>
     </>
   )
