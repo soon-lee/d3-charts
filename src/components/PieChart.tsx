@@ -1,19 +1,8 @@
 import {useEffect, useRef} from "react";
 import {Label, Legend, Marking, Title, Tooltip, Total} from "./elements.tsx";
 import {Font, TitlePlot} from "./TitlePlot.tsx";
-import {arc, pie, PieArcDatum} from "d3";
-import {PieBlock} from "./PieBlock.tsx";
-
-export interface PieItem {
-    group: string,
-    label: string,
-    value: number,
-}
-
-export interface PieDonut {
-    enabled: boolean,
-    rate: number
-}
+import {Donut, PiePlot, PieItem} from "./PiePlot.tsx";
+import {LegendPlot} from "./LegendPlot.tsx";
 
 export interface PieConfig {
     width: number,
@@ -28,7 +17,7 @@ export interface PieConfig {
 
 export interface PieProps {
     data: PieItem[],
-    donut: PieDonut,
+    donut: Donut,
     config: PieConfig
 }
 
@@ -36,21 +25,15 @@ export const PieChart = ({data, donut, config}: PieProps) => {
 
     const svgRef = useRef(null);
 
-    const pieLayout = pie<PieItem>().value(d => d.value);
-
-    const arcSector = arc<PieArcDatum<PieItem>>();
-    const arcLabel = arc<PieArcDatum<PieItem>>();
-    const arcMarking = arc<PieArcDatum<PieItem>>();
-
     useEffect(() => {
         if (!svgRef.current) return;
         // select(svgRef.current).
     }, []);
 
-    return <svg ref={svgRef}>
+    return <svg ref={svgRef} width={500} height={300}>
         <TitlePlot
             show={true}
-            width={100}
+            width={config.width}
             height={30}
             color={'black'}
             font={new Font(null)}
@@ -58,12 +41,18 @@ export const PieChart = ({data, donut, config}: PieProps) => {
             rotation={0}
             text={'config.title.text'}
         />
-        <PieBlock
+        <LegendPlot shape={'circle'} />
+        <LegendPlot shape={'square'} />
+        <LegendPlot shape={'triangle'} />
+        <LegendPlot shape={'diamond'} />
+        <LegendPlot shape={'cross'} />
+        <LegendPlot shape={'plus'} />
+        <LegendPlot shape={'line'} />
+        <PiePlot
             data={data}
             width={config.width}
             height={config.height}
             donut={donut}
-            config={config}
         />
     </svg>
 };

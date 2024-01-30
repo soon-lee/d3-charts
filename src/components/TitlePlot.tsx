@@ -59,9 +59,11 @@ export const TitlePlot = ({show, text, font, color, direction, rotation, width, 
         }
     }
 
-    return <g width={width} height={height} opacity={show ? 1 : 0}>
+    return <g width={width} height={height} opacity={show ? 1 : 0} stroke={'red'} color={'green'}>
         <path id={pathId} d={dealDirect()}/>
         <text
+            width={width}
+            height={height}
             rotate={dealRotate()}
             letterSpacing={(direction === 'lr' || direction === 'rl') ? 0 : 10}
             fill={color}
@@ -70,7 +72,7 @@ export const TitlePlot = ({show, text, font, color, direction, rotation, width, 
             fontStyle={font.style}
             transform={`rotate(${rotation},${width / 2},${height / 2})`}
         >
-            <textPath href={`#${pathId}`} textAnchor='middle'>{text}</textPath>
+            <textPath href={`#${pathId}`}>{text}</textPath>
         </text>
     </g>;
 }
