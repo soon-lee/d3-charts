@@ -1,18 +1,12 @@
 import {useEffect, useRef} from "react";
-import {Label, Legend, Marking, Title, Tooltip, Total} from "./elements.tsx";
-import {Font, TitlePlot} from "./TitlePlot.tsx";
-import {Donut, PiePlot, PieItem} from "./PiePlot.tsx";
-import {LegendPlot} from "./LegendPlot.tsx";
+import {TitlePlot} from "./TitlePlot.tsx";
+import {Donut, PieItem, PiePlot} from "./PiePlot.tsx";
+import {LegendItem, LegendPlot} from "./LegendPlot.tsx";
+import {Font, Polygon} from "./elements.tsx";
 
 export interface PieConfig {
     width: number,
     height: number,
-    title: Title,
-    legend: Legend,
-    total: Total,
-    tooltip: Tooltip,
-    label: Label,
-    marking: Marking
 }
 
 export interface PieProps {
@@ -21,6 +15,15 @@ export interface PieProps {
     config: PieConfig
 }
 
+const legendData: LegendItem[] = [
+    new LegendItem({polygon: new Polygon({shape: 'circle'})}),
+    new LegendItem({polygon: new Polygon({shape: 'triangle'})}),
+    new LegendItem({polygon: new Polygon({shape: 'square'})}),
+    new LegendItem({polygon: new Polygon({shape: 'diamond'})}),
+    new LegendItem({polygon: new Polygon({shape: 'line'})}),
+    new LegendItem({polygon: new Polygon({shape: 'ellipse'})}),
+    new LegendItem(null)
+]
 export const PieChart = ({data, donut, config}: PieProps) => {
 
     const svgRef = useRef(null);
@@ -41,13 +44,7 @@ export const PieChart = ({data, donut, config}: PieProps) => {
             rotation={0}
             text={'config.title.text'}
         />
-        <LegendPlot shape={'circle'} />
-        <LegendPlot shape={'square'} />
-        <LegendPlot shape={'triangle'} />
-        <LegendPlot shape={'diamond'} />
-        <LegendPlot shape={'cross'} />
-        <LegendPlot shape={'plus'} />
-        <LegendPlot shape={'line'} />
+        <LegendPlot show={true} position={"right"} cross={30} data={legendData}/>
         <PiePlot
             data={data}
             width={config.width}

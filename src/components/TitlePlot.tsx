@@ -1,20 +1,4 @@
-export class Font {
-    family: string;
-    size: number;
-    weight: string;
-    style: string;
-    height: number;
-
-    constructor(props: {
-        family?: string; size?: number; weight?: string; style?: string; height?: number;
-    } | null) {
-        this.family = props && props.family || '"Fira Code","Microsoft Yahei"';
-        this.size = props && props.size || 13;
-        this.weight = props && props.weight || 'normal';
-        this.style = props && props.style || 'normal';
-        this.height = props && props.height || 30;
-    }
-}
+import {Font} from "./elements.tsx";
 
 export interface TitlePlotProps {
     show: boolean;
