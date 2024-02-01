@@ -1,4 +1,4 @@
-import {arc, pie, PieArcDatum} from "d3";
+import {arc, pie, PieArcDatum, schemeCategory10} from "d3";
 import {useCallback, useMemo} from "react";
 
 export class PieItem {
@@ -59,9 +59,10 @@ export const PieBlock = ({data, donut, width, height}: PieProps) => {
             pieLayout(data)
                 .map((item, index) => {
 
-                    return <div>{JSON.stringify(item)}{'=>'}{index}{arcGenerator(item)}</div>
-
-                    // return <path d={} fill={schemeCategory10[index % 10]} onMouseMove={} onMouseOver={} onMouseOut={}></path>
+                    return <path d={arcGenerator(item)} fill={schemeCategory10[index % 10]} onMouseMove={() => {
+                    }} onMouseOver={() => {
+                    }} onMouseOut={() => {
+                    }}></path>
                 })
         }
     </g>
