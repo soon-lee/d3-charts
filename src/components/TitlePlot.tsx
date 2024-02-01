@@ -1,33 +1,45 @@
-export class Font {
-    family: string;
-    size: number;
-    weight: string;
-    style: string;
-    height: number;
+import {Font} from "./elements.tsx";
+
+export class TitlePlotConfig {
+    show: boolean;
+    x: number;
+    y: number;
+    length: number;
+    cross: number;
+    font: Font;
+    position: string;
+    reverse: boolean;
+    vertical: boolean;
 
     constructor(props: {
-        family?: string; size?: number; weight?: string; style?: string; height?: number;
+        show?: boolean;
+        x?: number;
+        y?: number;
+        length?: number;
+        cross?: number;
+        position?: string;
+        font?: Font;
+        reverse?: boolean;
+        vertical?: boolean;
     } | null) {
-        this.family = props && props.family || '"Fira Code","Microsoft Yahei"';
-        this.size = props && props.size || 13;
-        this.weight = props && props.weight || 'normal';
-        this.style = props && props.style || 'normal';
-        this.height = props && props.height || 30;
+        this.show = props && props.show !== undefined ? props.show : true;
+        this.x = props && props.x || 0;
+        this.y = props && props.y || 0;
+        this.length = props && props.length || 0;
+        this.cross = props && props.cross || 30;
+        this.position = props && props.position || 'top';
+        this.font = props && props.font || new Font(null);
+        this.reverse = props && props.reverse !== undefined ? props.reverse : false;
+        this.vertical = props && props.vertical !== undefined ? props.vertical : true;
     }
 }
 
 export interface TitlePlotProps {
-    show: boolean;
     text: string;
-    font: Font;
-    color: string;
-    direction: string;
-    rotation: number;
-    width: number;
-    height: number;
+    config: TitlePlotConfig;
 }
 
-export const TitlePlot = ({show, text, font, color, direction, rotation, width, height}: TitlePlotProps) => {
+export const TitlePlot = ({text, config}: TitlePlotProps) => {
     const randomChar12 = Array
         .from({length: 12})
         .map(() => {
@@ -37,40 +49,51 @@ export const TitlePlot = ({show, text, font, color, direction, rotation, width, 
     const pathId = `path-${randomChar12.join('')}`;
 
     const dealDirect: () => string = () => {
-        if (direction === 'rl') {
-            return `M ${width},${height / 2}L${0},${height / 2}`;
-        } else if (direction === 'tb') {
-            return `M ${width / 2},0L${width / 2},${height}`;
-        } else if (direction === 'bt') {
-            return `M ${width / 2},${height}L${width / 2},0`;
+        if (config.position === 'right') {
+            const x = config.x - config.cross / 2;
+            const y1 = config.reverse ? config.y + config.length : config.y;
+            const y2 = config.reverse ? config.y : config.y + config.length;
+            return `M ${x},${y1}L${x},${y2}`;
+        } else if (config.position === 'bottom') {
+            const x1 = config.reverse ? config.x + config.length : config.x;
+            const x2 = config.reverse ? config.x : config.x + config.length;
+            const y = config.y - config.cross / 2;
+            return `M ${x1},${y}L${x2},${y}`;
+        } else if (config.position === 'left') {
+            const x = config.x + config.cross / 2;
+            const y1 = config.reverse ? config.y + config.length : config.y;
+            const y2 = config.reverse ? config.y : config.y + config.length;
+            return `M ${x},${y1}L${x},${y2}`;
         } else {
-            return `M 0,${height / 2}L${width},${height / 2}`;
+            const x1 = config.reverse ? config.x + config.length : config.x;
+            const x2 = config.reverse ? config.x : config.x + config.length;
+            const y = config.y + config.cross / 2;
+            return `M ${x1},${y}L${x2},${y}`;
         }
     }
     const dealRotate: () => number = () => {
-        if (direction === 'rl') {
-            return 180;
-        } else if (direction === 'tb') {
-            return -90;
-        } else if (direction === 'bt') {
-            return 90;
+        if (config.position === 'left' || config.position === 'right') {
+            return config.vertical ? (config.reverse ? 90 : -90) : 0;
         } else {
-            return 0
+            console.log(config)
+            return config.reverse ? (config.vertical ? 180 : -90) : (config.vertical ? 0 : -90);
         }
     }
 
-    return <g width={width} height={height} opacity={show ? 1 : 0}>
-        <path id={pathId} d={dealDirect()}/>
-        <text
-            rotate={dealRotate()}
-            letterSpacing={(direction === 'lr' || direction === 'rl') ? 0 : 10}
-            fill={color}
-            fontSize={font.size}
-            fontFamily={font.family}
-            fontStyle={font.style}
-            transform={`rotate(${rotation},${width / 2},${height / 2})`}
-        >
-            <textPath href={`#${pathId}`} textAnchor='middle'>{text}</textPath>
-        </text>
+    return <g x={config.x} y={config.y} opacity={config.show ? 1 : 0}>
+        <g>
+            <path id={pathId} d={dealDirect()}/>
+            <text
+                rotate={dealRotate()}
+                letterSpacing={config.vertical ? (config.position === 'right' || config.position === 'left' ? 10 : 0) : 10}
+                stroke={config.font.color}
+                fontSize={config.font.size}
+                fontFamily={config.font.family}
+                fontStyle={config.font.style}
+                fontWeight={config.font.weight}
+            >
+                <textPath href={`#${pathId}`}>{text}</textPath>
+            </text>
+        </g>
     </g>;
 }

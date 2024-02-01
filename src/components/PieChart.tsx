@@ -1,69 +1,44 @@
 import {useEffect, useRef} from "react";
-import {Label, Legend, Marking, Title, Tooltip, Total} from "./elements.tsx";
-import {Font, TitlePlot} from "./TitlePlot.tsx";
-import {arc, pie, PieArcDatum} from "d3";
-import {PieBlock} from "./PieBlock.tsx";
-
-export interface PieItem {
-    group: string,
-    label: string,
-    value: number,
-}
-
-export interface PieDonut {
-    enabled: boolean,
-    rate: number
-}
+import {TitlePlot, TitlePlotConfig} from "./TitlePlot.tsx";
+import {Donut, PiePlot, PiePlotConfig, PiePlotItem} from "./PiePlot.tsx";
+import {LegendItem, LegendPlot, LegendPlotConfig} from "./LegendPlot.tsx";
+import {Font, Polygon} from "./elements.tsx";
 
 export interface PieConfig {
     width: number,
     height: number,
-    title: Title,
-    legend: Legend,
-    total: Total,
-    tooltip: Tooltip,
-    label: Label,
-    marking: Marking
 }
 
 export interface PieProps {
-    data: PieItem[],
-    donut: PieDonut,
+    data: PiePlotItem[],
+    donut: Donut,
     config: PieConfig
 }
 
-export const PieChart = ({data, donut, config}: PieProps) => {
+const legendData: LegendItem[] = [new LegendItem({color: 'red'}), new LegendItem({color: 'blue'}), new LegendItem({color: 'green'}), new LegendItem({color: 'yellow'}), new LegendItem({color: 'orange'}), new LegendItem({color: 'purple'}), new LegendItem({color: 'pink'})]
+const legendConfig = new LegendPlotConfig({
+    x: 0, y: 50, length: 100, cross: 30, position: 'top', polygon: new Polygon({shape: 'line'}), font: new Font(null)
+});
+export const PieChart = ({data, config}: PieProps) => {
 
     const svgRef = useRef(null);
-
-    const pieLayout = pie<PieItem>().value(d => d.value);
-
-    const arcSector = arc<PieArcDatum<PieItem>>();
-    const arcLabel = arc<PieArcDatum<PieItem>>();
-    const arcMarking = arc<PieArcDatum<PieItem>>();
 
     useEffect(() => {
         if (!svgRef.current) return;
         // select(svgRef.current).
     }, []);
 
-    return <svg ref={svgRef}>
+    return <svg ref={svgRef} width={500} height={300}>
         <TitlePlot
-            show={true}
-            width={100}
-            height={30}
-            color={'black'}
-            font={new Font(null)}
-            direction={'lr'}
-            rotation={0}
             text={'config.title.text'}
+            config={new TitlePlotConfig({
+                x: 0, y: 0, position: 'left', length: 300, reverse: false, vertical: true
+            })}
         />
-        <PieBlock
+        <LegendPlot config={legendConfig} data={legendData}/>
+        <PiePlot
             data={data}
-            width={config.width}
-            height={config.height}
-            donut={donut}
-            config={config}
+            config={new PiePlotConfig({})}
         />
     </svg>
 };
