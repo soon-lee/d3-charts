@@ -1,5 +1,5 @@
 import {arc, pie, PieArcDatum} from "d3";
-import {MouseEvent, useCallback} from "react";
+import {MouseEvent, useCallback, useRef, useState} from "react";
 import {Font} from "./elements.tsx";
 
 export class PiePlotItem {
@@ -119,7 +119,11 @@ export const PiePlot = ({data, config}: PieProps) => {
         return arc<PieArcDatum<PiePlotItem>>().innerRadius(innerRadius).outerRadius(outerRadius);
     }, [config.donut]);
 
+    const [tooltipPos, setTooltipPos] = useState({left: event.clientX, top: event.clientY})
+    const [tooltip, setTooltip] = useState(false)
+    const divRef = useRef(null)
     return <g transform={`translate(${config.width / 2}, ${(config.height - 40) / 2 + 40})`}>
+
         {pieLayout(data.items)
             .map((item, index) => {
                 const arcGen = arcGenerator();
@@ -127,11 +131,16 @@ export const PiePlot = ({data, config}: PieProps) => {
                     key={index}
                     d={arcGen(item) as string}
                     fill={item.data.color}
-                    onMouseMove={(event) => {
-                        config.onMouseMove(event, item);
-                    }}
+                    // onMouseMove={(event) => {
+                    //     config.onMouseMove(event, item);
+                    //     setTooltip(true)
+                    //     console.log(event.clientX, event.clientY)
+                    // }}
                     onMouseOver={(event) => {
                         config.onMouseOver(event, item);
+                        setTooltip(true)
+                        console.log(event.clientX, event.clientY)
+                        if (!divRef.current) return;
                     }}
                     onMouseOut={(event) => {
                         config.onMouseOut(event, item);

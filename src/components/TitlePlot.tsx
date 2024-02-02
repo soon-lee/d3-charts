@@ -1,4 +1,7 @@
 import {Font} from "./elements.tsx";
+import styled from "styled-components";
+import {Flex, Tooltip} from "antd";
+import {ExclamationCircleOutlined} from "@ant-design/icons";
 
 export class TitlePlotConfig {
     show: boolean;
@@ -96,4 +99,61 @@ export const TitlePlot = ({text, config}: TitlePlotProps) => {
             </text>
         </g>
     </g>;
+}
+
+export class BorderText {
+    show: boolean;
+    position: string;
+    font: Font;
+
+    constructor(props: {
+        show?: boolean;
+        position?: string;
+        font?: Font;
+    } | null) {
+        this.show = props && props.show !== undefined ? props.show : true;
+        this.position = props && props.position || 'top';
+        this.font = props && props.font || new Font(null);
+    }
+}
+
+export class HorizontalTitleConfig {
+    title: BorderText;
+    notion: BorderText;
+
+    constructor(props: {
+        title?: BorderText;
+        notion?: BorderText;
+    } | null) {
+        this.title = props && props.title || new BorderText(null);
+        this.notion = props && props.notion || new BorderText(null);
+    }
+}
+
+export class HorizontalTitleData {
+    label: string;
+    info: string;
+
+    constructor(props: { label?: string, info?: string } | null) {
+        this.label = props && props.label || '';
+        this.info = props && props.info || '';
+    }
+}
+
+export interface HorizontalTitleProps {
+    data: HorizontalTitleData;
+    config: HorizontalTitleConfig;
+}
+
+export const HorizontalTitle = ({data, config}: HorizontalTitleProps) => {
+
+    const Title = styled.div`
+
+    `;
+    return <Flex>
+        <Title>{data.label}</Title>
+        <Tooltip placement="top" title={data.info} arrow rootClassName='popover'>
+            <ExclamationCircleOutlined/>
+        </Tooltip>
+    </Flex>
 }

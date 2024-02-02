@@ -3,11 +3,12 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import {PieChart, PieConfig} from "./components/PieChart.tsx";
-import {Donut, PieItem} from "./components/PiePlot.tsx";
+import {Donut, PiePlotItem} from "./components/PiePlot.tsx";
+import {BorderText, HorizontalTitle} from "./components/TitlePlot.tsx";
 
 function App() {
 
-    const data: PieItem[] = [
+    const data: PiePlotItem[] = [
         {key: '0', group: 'Group1', label: 'Group1', value: 45, color: '#61dafb'},
         {key: '1', group: 'Group2', label: 'Group2', value: 67, color: '#646cfc'},
         {key: '2', group: 'Group3', label: 'Group3', value: 23, color: '#646cfd'},
@@ -33,13 +34,15 @@ function App() {
                 </a>
             </div>
             <h1>Vite + React</h1>
-            <div className="card">
+            <div className="card" style={{position: 'relative', width: 500, height: 300}}>
                 <button onClick={() => setDonut(prevState => ({
                     ...prevState, enable: !donut.enable
                 }))}>
                     {donut.enable ? '饼图' : '环图'}
                 </button>
                 <PieChart data={data} donut={donut} config={config as PieConfig}/>
+                <HorizontalTitle data={{label: 'fhdslfnk', info: 'dfjdpfoge-jbmkfog'}}
+                                 config={{title: new BorderText(null), notion: new BorderText(null)}}/>
             </div>
         </>
     )
