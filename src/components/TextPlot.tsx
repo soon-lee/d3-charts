@@ -6,9 +6,7 @@ export class TextPlotConfig {
     y: number;
 
     constructor(props: {
-        x?: number;
-        y?: number;
-        font?: Font;
+        x?: number; y?: number; font?: Font;
     } | null) {
         this.x = props && props.x || 0;
         this.y = props && props.y || 0;

@@ -24,76 +24,83 @@ export interface ShapePlotProps {
 }
 
 export const ShapePlot = ({config}: ShapePlotProps) => {
+    let width = 32;
+    let height = 16;
+    if (config.polygon.size === 'small') {
+        width = 24;
+        height = 12;
+    }
+    if (config.polygon.size === 'medium') {
+        width = 32;
+        height = 16;
+    }
+    if (config.polygon.size === 'large') {
+        width = 48;
+        height = 24;
+    }
     if (config.polygon.shape === 'circle') {
         return <circle
             fill={config.polygon.fill}
             stroke={config.polygon.stroke}
-            cx={config.x + 20}
-            cy={config.y + config.cross / 2}
-            r="10"
-            style={{margin: `${config.cross > 20 ? (config.cross - 20) / 2 : 0} 0`}}
+            cx={config.x + width / 2}
+            cy={config.y + height / 2}
+            r={height / 4}
         />
     } else if (config.polygon.shape === 'triangle') {
         return <polygon
             fill={config.polygon.fill}
             stroke={config.polygon.stroke}
-            points={`${config.x + 20},${config.y + 5} ${config.x + 30},${config.y + 25} ${config.x + 10},${config.y + 25}`}
-            style={{margin: `${config.cross > 20 ? (config.cross - 20) / 2 : 0} 0`}}
+            points={`${config.x + width / 2},${config.y + height / 4} ${config.x + width * 2 / 3},${config.y + height * 3 / 4} ${config.x + width / 3},${config.y + height * 3 / 4}`}
         />
     } else if (config.polygon.shape === 'square') {
         return <rect
             fill={config.polygon.fill}
             stroke={config.polygon.stroke}
-            x={config.x + 12}
-            y={config.cross > 20 ? config.y + config.cross / 2 - 8 : config.y + 2}
-            width="18"
-            height="18"
-            style={{margin: `${config.cross > 20 ? (config.cross - 20) / 2 : 0} 0`}}
+            x={config.x + width / 2 - height / 4}
+            y={config.y + height / 4}
+            width={height / 2}
+            height={height / 2}
         />
     } else if (config.polygon.shape === 'diamond') {
         return <rect
             fill={config.polygon.fill}
             stroke={config.polygon.stroke}
-            x={config.x + 12}
-            y={config.cross > 20 ? config.y + config.cross / 2 - 8 : config.y + 2}
-            width="16"
-            height="16"
-            transform={`rotate(45,${config.x + 20},${config.y + 10})`}
-            style={{margin: `${config.cross > 20 ? (config.cross - 20) / 2 : 0} 0`}}
+            x={config.x + width / 2 - height / 4}
+            y={config.y + height / 4}
+            width={height / 2}
+            height={height / 2}
+            transform={`rotate(45,${config.x + width / 2},${config.y + height / 2})`}
         />
     } else if (config.polygon.shape === 'line') {
         return <rect
             fill={config.polygon.fill}
             stroke={config.polygon.stroke}
-            x={config.x}
-            y={config.cross > 20 ? config.y + config.cross / 2 - 2 : config.y + 8}
-            width="40"
+            x={config.x + width / 8}
+            y={config.y + height / 2 - 2}
+            width={width * 3 / 4}
             height="4"
             rx="2"
             ry="2"
-            style={{margin: `${config.cross > 20 ? (config.cross - 20) / 2 : 0} 0`}}
         />
     } else if (config.polygon.shape === 'ellipse') {
         return <ellipse
             fill={config.polygon.fill}
             stroke={config.polygon.stroke}
-            cx={config.x + 20}
-            cy={config.cross > 20 ? config.y + config.cross / 2 : config.y + 10}
-            rx="20"
-            ry="10"
-            style={{margin: `${config.cross > 20 ? (config.cross - 20) / 2 : 0} 0`}}
+            cx={config.x + width / 2}
+            cy={config.y + height / 2}
+            rx={width * 3 / 8}
+            ry={height * 3 / 8}
         />
     } else {
         return <rect
             fill={config.polygon.fill}
             stroke={config.polygon.stroke}
-            x={config.x}
-            y={config.cross > 20 ? config.y + (config.cross - 20) / 2 : config.y}
-            width="40"
-            height="20"
-            rx="5"
-            ry="5"
-            style={{margin: `${config.cross > 20 ? (config.cross - 20) / 2 : 0} 0`}}
+            x={config.x + width / 8}
+            y={config.y + height / 8}
+            width={width * 3 / 4}
+            height={height * 3 / 4}
+            rx={config.polygon.size === 'small' ? 3 : 5}
+            ry={config.polygon.size === 'small' ? 3 : 5}
         />
     }
 }
