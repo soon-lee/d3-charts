@@ -69,7 +69,6 @@ export const PieChart = ({data, config}: PieProps) => {
             })}
         />
         <LegendPlot data={legendProps.data} config={legendProps.config}/>
-        <TooltipPlot data={tooltipProps.data} config={tooltipProps.config}/>
         <PiePlot
             data={{items: data}}
             config={new PiePlotConfig({
@@ -86,6 +85,11 @@ export const PieChart = ({data, config}: PieProps) => {
                         config: {
                             ...prev.config,
                             show: true,
+                            x: e.nativeEvent.offsetX - 100, y: e.nativeEvent.offsetY - 100,
+                            polygon: {
+                                ...prev.config.polygon,
+                                color: d.data.color
+                            }
                         }
                     }))
                 }, onMouseOut: () => {
@@ -97,10 +101,28 @@ export const PieChart = ({data, config}: PieProps) => {
                         }
                     }))
                 }, onMouseMove: (e, d) => {
-
+                    setTooltipProps(prev => ({
+                        data: {
+                            ...prev.data,
+                            items: [new TooltipPlotItem({
+                                color: d.data.color,
+                                label: d.data.label,
+                                value: d.data.value
+                            })]
+                        },
+                        config: {
+                            ...prev.config,
+                            x: e.nativeEvent.offsetX - 100, y: e.nativeEvent.offsetY - 100,
+                            polygon: {
+                                ...prev.config.polygon,
+                                color: d.data.color
+                            }
+                        }
+                    }))
                 },
             })}
         />
+        <TooltipPlot data={tooltipProps.data} config={tooltipProps.config}/>
 
     </svg>
 };
