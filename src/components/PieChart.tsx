@@ -1,4 +1,4 @@
-import {useRef, useState} from "react";
+import {useState} from "react";
 import {TitlePlot, TitlePlotConfig} from "./TitlePlot.tsx";
 import {Donut, PiePlot, PiePlotConfig, PiePlotItem} from "./PiePlot.tsx";
 import {LegendPlot, LegendPlotConfig, LegendPlotData, LegendPlotItem, LegendPlotProps} from "./LegendPlot.tsx";
@@ -18,7 +18,6 @@ export interface PieProps {
 
 export const PieChart = ({data, config}: PieProps) => {
 
-    const svgRef = useRef(null);
     const [legendProps, setLegendProps] = useState<LegendPlotProps>({
         data: new LegendPlotData({
             items: data.map((item, index) => {

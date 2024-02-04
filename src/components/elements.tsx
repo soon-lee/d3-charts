@@ -59,3 +59,47 @@ export class GroupedPolygon {
         this.polygon = props && props.polygon || new Polygon(null);
     }
 }
+
+export class BorderBar {
+    position: string;
+    cross: number;
+    offset: number;
+
+    constructor(props: { position?: string, cross?: number, offset?: number; } | undefined) {
+        this.position = props && props.position || 'top';
+        this.cross = props && props.cross || 30;
+        this.offset = props && props.offset || 0;
+    }
+}
+
+export class Item {
+    dimension: string;
+    metric: string;
+
+    constructor(props: { dimension?: string, metric?: string; } | undefined) {
+        this.dimension = props && props.dimension || 'dimension';
+        this.metric = props && props.metric || 'metric';
+    }
+}
+
+export class DataItem {
+    origin: Item[];
+    dimension: string[];
+    show: string[];
+    render: string[];
+
+    constructor(props: { origin?: Item[], dimension?: string[], show?: string[], render?: string[]; } | undefined) {
+        this.origin = props && props.origin || [];
+        this.dimension = props && props.dimension || [];
+        this.show = props && props.show || [];
+        this.render = props && props.render || [];
+    }
+}
+
+export class Data {
+    data: DataItem[];
+
+    constructor(props: { data?: DataItem[]; } | undefined) {
+        this.data = props && props.data || [];
+    }
+}

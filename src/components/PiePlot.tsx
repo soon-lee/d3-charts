@@ -108,7 +108,7 @@ export interface PieProps {
 export const PiePlot = ({data, config}: PieProps) => {
 
     const radius = useCallback(() => {
-        return Math.min(config.width, (config.height - 40)) / 2 - 10;
+        return Math.min(config.width, (config.height - 40)) / 2 - 20;
     }, [config.width, config.height]);
 
     const pieLayout = pie<PiePlotItem>().value(d => d.value);
@@ -118,14 +118,16 @@ export const PiePlot = ({data, config}: PieProps) => {
         const outerRadius = radius();
         return arc<PieArcDatum<PiePlotItem>>().innerRadius(innerRadius).outerRadius(outerRadius);
     }, [config.donut]);
+    const arcMarkingGenerator = useCallback(() => {
+        return arc<PieArcDatum<PiePlotItem>>().innerRadius(radius()).outerRadius(radius());
+    }, [config.width, config.height]);
 
-    return <g transform={`translate(${config.width / 2}, ${(config.height - 40) / 2 + 40})`}>
-
-        {pieLayout(data.items)
+    const pieSector = useCallback(() => {
+        return pieLayout(data.items)
             .map((item, index) => {
                 const arcGen = arcGenerator();
                 return <path
-                    key={index}
+                    key={`sector-${index}`}
                     d={arcGen(item) as string}
                     fill={item.data.color}
                     onMouseMove={(event) => {
@@ -138,6 +140,61 @@ export const PiePlot = ({data, config}: PieProps) => {
                         config.onMouseOut(event, item);
                     }}
                 />
-            })}
-    </g>
+            })
+    }, [data.items]);
+    const pieLabel = useCallback(() => {
+        return pieLayout(data.items)
+            .map((item, index) => {
+                const arcGen = arcGenerator();
+                return <text
+                    key={`label-${index}`}
+                    transform={`translate(${arcGen.centroid(item)})`}
+                >{item.value}</text>
+            })
+    }, [data.items]);
+    const pieMarking = useCallback(() => {
+        return pieLayout(data.items)
+            .map((item, index) => {
+                const arcGen = arcMarkingGenerator();
+                const [x, y] = arcGen.centroid(item);
+                const angle = (item.endAngle + item.startAngle) / 2;
+                return (
+                    <g key={`marking-${index}`}>
+                        <line
+                            x1={x}
+                            y1={y}
+                            x2={x * 1.1}
+                            y2={y * 1.1}
+                            stroke={item.data.color}
+                        />
+                        <line
+                            x1={x * 1.1}
+                            y1={y * 1.1}
+                            x2={angle >= Math.PI && angle <= Math.PI * 2 ? x * 1.1 - 30 : x * 1.1 + 30}
+                            y2={y * 1.1}
+                            stroke={item.data.color}
+                        />
+                        <text x={angle >= Math.PI && angle <= Math.PI * 2 ? x * 1.1 - 30 - 100 : x * 1.1 + 30}
+                              y={y * 1.1 + 5}
+                              fill={item.data.color}
+                        >{`${item.data.label}:  ${item.data.value}`}</text>
+                    </g>
+                );
+            })
+    }, [data.items]);
+
+    return (
+        <g>
+            <g transform={`translate(${config.width / 2}, ${(config.height - 40) / 2 + 40})`}>
+                {pieSector()}
+            </g>
+            <g transform={`translate(${config.width / 2}, ${(config.height - 40) / 2 + 40})`}
+               textAnchor='middle' alignmentBaseline='central'>
+                {pieLabel()}
+            </g>
+            <g transform={`translate(${config.width / 2}, ${(config.height - 40) / 2 + 40})`}>
+                {pieMarking()}
+            </g>
+        </g>
+    );
 }
